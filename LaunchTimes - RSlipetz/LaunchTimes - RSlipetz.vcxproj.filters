@@ -5,13 +5,48 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="Interfaces">
+      <UniqueIdentifier>{269c05d9-c9ef-44ca-b720-489aed9374c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Validators">
+      <UniqueIdentifier>{6f01e15f-3735-4b38-9077-3e0d40efca44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Launchers">
+      <UniqueIdentifier>{8688f77f-c550-4f27-a665-7b2feab1cedd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="LaunchTimes_main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LaunchtimesValidator.cpp">
+      <Filter>Validators</Filter>
+    </ClCompile>
+    <ClCompile Include="FilesLauncher.cpp">
+      <Filter>Launchers</Filter>
+    </ClCompile>
+    <ClCompile Include="LauncherCommand.cpp">
+      <Filter>Launchers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IArgumentValidator.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="LaunchtimesValidator.h">
+      <Filter>Validators</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommand.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="ILauncher.h">
+      <Filter>Interfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="FilesLauncher.h">
+      <Filter>Launchers</Filter>
+    </ClInclude>
+    <ClInclude Include="LauncherCommand.h">
+      <Filter>Launchers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
