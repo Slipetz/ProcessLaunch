@@ -1,20 +1,27 @@
 #include <fstream>
-#include <thread>
+#include <future>
 #include <algorithm>
 using namespace std;
 
 #include "FilesLauncher.h"
 #include "Results.h"
 
-vector<Results> LaunchThread(vector<LauncherCommand>& commands) {
-	vector<HANDLE> threadHandles;
-	vector<Results> processResults;
-	for (LauncherCommand& command : commands)
-	{
-		command.execute();
-		threadHandles.push_back(command.getProcInfo().hProcess);
+//LaunchThread - Launches all of the Commands for the corresponding LaunchGroup in an asynchronous fashion
+//Accepts - Vector<LaunchCommand> that contains all of the commands to be launched in concurrently
+//Returns - Vector<Results> that contains all of the results for the Commands that were executed in this launch group
+vector<Results> LauncheProcesses(vector<LauncherCommand>& commands) {
+	vector<future<void>> futureCallbacks;
+
+	for (LauncherCommand& command : commands) {
+		future<void> callback = async(launch::async, &LauncherCommand::execute, &command);
+		futureCallbacks.push_back(move(callback));
 	}
-	WaitForMultipleObjects(threadHandles.size(), threadHandles.data(), TRUE, INFINITE);
+
+	//Wait for the callbacks to all comeback before we proceed to process the data
+	for (future<void> &callback : futureCallbacks)
+		callback.get();
+
+	vector<Results> processResults;
 	for (LauncherCommand& command : commands)
 	{
 		processResults.push_back(command);
@@ -24,9 +31,18 @@ vector<Results> LaunchThread(vector<LauncherCommand>& commands) {
 	return processResults;
 }
 
+//OutputResults - Handles the output of the Results objects that were generated from the LauncherCommands
+//Accepts - Vector<Results> that contains all of the results from each of the LauncherCommands that were executed
+//Returns - Nothing. All output is directly to the console
 void OutputResults(vector<Results>& results) {
 	int launchGroup = 0;
+	vector<Results> errorResults;
 	for (Results& output : results) {
+		if (output.hasProcessFailed()) {
+			errorResults.push_back(output);
+			continue;
+		}
+
 		if (output.getLaunchGroup() != launchGroup) {
 			wcout << endl;
 			launchGroup = output.getLaunchGroup();
@@ -34,9 +50,18 @@ void OutputResults(vector<Results>& results) {
 		}
 		wcout << output << endl;
 	}
+
+	if (errorResults.size() > 0) {
+		wcout << endl;
+		wcout << L"Failed Processes\n" << wstring(16, '*') << endl;
+		for (Results& result : errorResults) {
+			wcout << result << endl;
+		}
+	}
+
 }
 
-void FilesLauncher::launch() {
+void FilesLauncher::execute() {
 	//Need to parse the file to build what we need to run and when
 	ifstream launchFile(absolute(filePath));
 
@@ -52,7 +77,7 @@ void FilesLauncher::launch() {
 
 	vector<Results> programResults;
 	for (LauncherObject sequence : launcher) {
-		vector<Results> results = LaunchThread(sequence.second);
+		vector<Results> results = LauncheProcesses(sequence.second);
 		programResults.insert(programResults.end(), results.begin(), results.end());
 	}
 

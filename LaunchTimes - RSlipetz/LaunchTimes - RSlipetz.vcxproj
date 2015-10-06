@@ -152,7 +152,6 @@
   <ItemGroup>
     <ClInclude Include="IArgumentValidator.h" />
     <ClInclude Include="ICommand.h" />
-    <ClInclude Include="ILauncher.h" />
     <ClInclude Include="FilesLauncher.h" />
     <ClInclude Include="LauncherCommand.h" />
     <ClInclude Include="LaunchtimesValidator.h" />

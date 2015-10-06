@@ -13,6 +13,14 @@ Results::Results(LauncherCommand & command) : results(command)
 
 wostream& operator<<(wostream & out, Results const& result)
 {
+	if (result.hasProcessFailed())
+	{
+		out << "LG:" << setw(2) << left << result.getLaunchGroup();
+		out << " PN:" << result.results.getExecutable();
+		out << " PM:" << result.results.getParameters();
+		out << " Error: " << result.results.getErrorMsg();
+		return out;
+	}
 	out << "LG:" << setw(2) << left << result.getLaunchGroup();
 	out << " K:" << internal << setfill(L'0') << setw(2) << result.kerTime.wMinute << "." << setw(2) << result.kerTime.wSecond << "." <<  setw(3) << result.kerTime.wMilliseconds;
 	out << " U:" << setw(2) << result.usrTime.wMinute << "." << setw(2) << result.usrTime.wSecond << "." << setw(3) << result.usrTime.wMilliseconds;

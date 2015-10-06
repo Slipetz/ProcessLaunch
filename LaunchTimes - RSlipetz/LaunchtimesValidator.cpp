@@ -1,4 +1,7 @@
 #include <regex>
+using namespace std;
+#include <filesystem>
+using namespace std::tr2::sys;
 #include "LaunchtimesValidator.h"
 
 bool LaunchTimesValidator::validate() {

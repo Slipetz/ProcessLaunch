@@ -1,15 +1,7 @@
 #ifndef __LAUNCHVALIDATOR__
 #define __LAUNCHVALIDATOR__
 
-#include <iostream>
-#include <string>
-using namespace std;
-
-#include <filesystem>
-using namespace tr2::sys;
-
 #include "IArgumentValidator.h"
-
 
 //LaunchTimes Validator - Implementation of the ArgumentValidator interface for the LaunchTimes program.
 //						  Validates that the incoming arguments are correct (Correct number of arguments, correct file ext and file exists)
@@ -21,7 +13,9 @@ public:
 	//Constructor
 	LaunchTimesValidator(int &argc, char** &argv) : IArgumentValidator(argc, argv) { }
 
-	//Data Functions
+	//Validate - Validates the Arugments for the LaunchTimes program
+	//Parameters - None - overridden base method that uses the base classes data members
+	//Returns - bool value stating whether or not the data is valid - true = valid
 	bool validate() override;
 };
 

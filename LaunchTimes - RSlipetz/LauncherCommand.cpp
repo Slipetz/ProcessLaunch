@@ -1,5 +1,19 @@
 #include <process.h>
+#include <string>
+#include <iostream>
+using namespace std;
+
 #include "LauncherCommand.h"
+
+//GetErrorMessage - Uses the "GetLastError" code and renders it as a readable string as opposed to a code
+//Accepts - Nothing. Data is gathered from within the function
+//Returns - wstring containing the "human-readable" error code message
+wstring GetErrorMessage() {
+	wchar_t buf[256];
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), buf, 256, NULL);
+	return wstring(buf);
+}
 
 void LauncherCommand::execute() {
 	wstring command = executable + L" " + parameters;
@@ -10,22 +24,24 @@ void LauncherCommand::execute() {
 		wcsncpy_s(commandLine, CP_MAX_COMMANDLINE, command.c_str(), command.size() + 1);
 		processFailed = CreateProcess(NULL, commandLine, NULL, //No Higher Security
 			NULL, false, CREATE_NEW_CONSOLE, NULL, NULL, &sInfo, &pi);
+
+		//If CreateProcess returns 0, an error has occurred within the program
+		if (processFailed == 0)
+			errorMsg = GetErrorMessage();
 		
 		delete[] commandLine;
 	}
 	catch (std::bad_alloc)
 	{
-		wcerr << "Insufficient memory to launch this application!" << endl;
 		processFailed = 0;
+		errorMsg = L"Insufficient memory to launch this application!";
 	}
 	catch (std::exception)
 	{
-		wcerr << "Error occured during execute()!" << endl;
 		processFailed = 0;
+		errorMsg = L"Error occured during LauncherCommand::execute with Command: " + command;
 	}
-
-	if (GetLastError() != 0)
-	{
-		throw L"Failed to launch process: " + executable + L" with parameters: " + parameters;
-	}
+	
+	//Wait for the Process to finish before we return
+	WaitForSingleObject(pi.hProcess, INFINITE);
 }

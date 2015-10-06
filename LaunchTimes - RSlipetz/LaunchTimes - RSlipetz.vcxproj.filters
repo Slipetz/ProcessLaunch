@@ -45,9 +45,6 @@
     <ClInclude Include="ICommand.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
-    <ClInclude Include="ILauncher.h">
-      <Filter>Interfaces</Filter>
-    </ClInclude>
     <ClInclude Include="FilesLauncher.h">
       <Filter>Launchers</Filter>
     </ClInclude>

@@ -1,25 +1,25 @@
 #ifndef __LAUNCHERCOMMAND__
 #define __LAUNCHERCOMMAND__
 
-#include <iostream>
-#include <Windows.h>
-using namespace std;
+//LauncherCommand - Concrete Command class that contains all of the necessary to create/launch a process and hold the results of the process
+// Ryan Slipetz - 0663240
+// Date: 9/27/2015
 
+#include <Windows.h>
 #include "ICommand.h"
-#include "IThreadable.h"
 
 class LauncherCommand : public ICommand {
-
-	//Data Members
 private:
+	//Data Members
 	wstring executable;
 	wstring parameters;
 	int launchGroup;
 
-	//FailState Data for the Process:
+	//FailState Data if CreateProcess fails
 	BOOL processFailed;
+	wstring errorMsg;
 
-	//Disposable Data Members
+	//Disposable Data Members/One-time use Data Members for Create Process
 	STARTUPINFO sInfo;
 	PROCESS_INFORMATION pi;
 	long CP_MAX_COMMANDLINE;
@@ -31,6 +31,9 @@ public:
 	}
 
 public:
+	//Execute - Overriden ICommand method - executes the launch of the Process and handles all the necessary information regarding it's creation and deployment
+	//Accepts - Nothing. Overriden base-class method
+	//Returns - Nothing. All data generated stays within the class
 	void execute() override;
 public:
 	//Getters
@@ -39,6 +42,7 @@ public:
 	wstring getParameters() const { return parameters; }
 	int getLaunchGroup() const { return launchGroup; }
 	bool hasProcessFailed() const { return processFailed == 0; }
+	wstring getErrorMsg() const { return errorMsg; }
 };
 
 #endif

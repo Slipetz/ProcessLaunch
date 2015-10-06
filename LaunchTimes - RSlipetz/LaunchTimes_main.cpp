@@ -4,12 +4,13 @@
 // Date: 9/27/2015
 
 #include <memory>
+#include <iostream>
 using namespace std;
 
 #include "LaunchtimesValidator.h"
 #include "FilesLauncher.h"
 
-int main(int argc, char** argv) try {
+int main(int argc, char** argv) {
 	cout << "LaunchTimes - Ryan Slipetz - Fanshawe Student 6th Semester" << endl;
 
 	unique_ptr<IArgumentValidator> validator(new LaunchTimesValidator(argc, argv));
@@ -20,11 +21,6 @@ int main(int argc, char** argv) try {
 		return EXIT_FAILURE;
 	}
 	
-	unique_ptr<ILauncher> launcher(new FilesLauncher(argv[1]));
-	launcher->launch();
-} catch (wstring ex) {
-	wcerr << ex << endl;
-}
-catch (...) {
-	wcerr << L"Unknown exception has occurred. Terminating..." << endl;
+	unique_ptr<ICommand> launcher(new FilesLauncher(argv[1]));
+	launcher->execute();
 }
