@@ -13,7 +13,7 @@ bool LaunchTimesValidator::validate() {
 
 	//Means we have correct number of arguments. Validate that we have a .txt file next
 	string filename = argv[1];
-	regex fileExt(R"rgx(.txt$)rgx");
+	regex fileExt(R"rgx(\.txt$)rgx");
 	bool regexMatch = regex_search(filename, fileExt, regex_constants::match_any);
 
 	if (!regexMatch)

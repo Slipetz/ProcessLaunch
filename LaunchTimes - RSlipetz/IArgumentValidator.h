@@ -20,11 +20,10 @@ protected:
 protected:
 	//Constructor
 	IArgumentValidator(int &argc, char** &argv) : argc(argc), argv(argv) { }
-	
-	virtual bool validate() = 0;
-
 public:
 	wstring GetErrorMessage() { return errorMessage; }
+	virtual bool validate() = 0;
+
 };
 
 #endif

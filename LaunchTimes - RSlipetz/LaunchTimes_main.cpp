@@ -3,20 +3,28 @@
 // Ryan Slipetz - 0663240
 // Date: 9/27/2015
 
-#include "LaunchtimesValidator.h"
-#include "FilesLauncher.h"
+#include <memory>
 using namespace std;
 
-int main(int argc, char** argv) {
+#include "LaunchtimesValidator.h"
+#include "FilesLauncher.h"
 
-	LaunchTimesValidator validator(argc, argv);
+int main(int argc, char** argv) try {
+	cout << "LaunchTimes - Ryan Slipetz - Fanshawe Student 6th Semester" << endl;
 
-	if (!validator.validate())
+	unique_ptr<IArgumentValidator> validator(new LaunchTimesValidator(argc, argv));
+
+	if (!validator->validate())
 	{
-		cout << validator.GetErrorMessage() << endl;
-		return 1;
+		cout << validator->GetErrorMessage() << endl;
+		return EXIT_FAILURE;
 	}
 	
-	FilesLauncher launcher(argv[1]);
-	launcher.launch();
+	unique_ptr<ILauncher> launcher(new FilesLauncher(argv[1]));
+	launcher->launch();
+} catch (wstring ex) {
+	wcerr << ex << endl;
+}
+catch (...) {
+	wcerr << L"Unknown exception has occurred. Terminating..." << endl;
 }

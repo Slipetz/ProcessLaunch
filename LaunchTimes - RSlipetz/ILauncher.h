@@ -2,7 +2,7 @@
 #define __ILAUNCHER__
 
 class ILauncher {
-protected:
+public:
 	virtual void launch() = 0;
 };
 

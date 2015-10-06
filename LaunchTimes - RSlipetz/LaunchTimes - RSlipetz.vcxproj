@@ -71,6 +71,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>launchtimes</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -146,6 +147,7 @@
     <ClCompile Include="LauncherCommand.cpp" />
     <ClCompile Include="LaunchtimesValidator.cpp" />
     <ClCompile Include="LaunchTimes_main.cpp" />
+    <ClCompile Include="Results.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IArgumentValidator.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="FilesLauncher.h" />
     <ClInclude Include="LauncherCommand.h" />
     <ClInclude Include="LaunchtimesValidator.h" />
+    <ClInclude Include="Results.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
