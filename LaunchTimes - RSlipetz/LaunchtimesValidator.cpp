@@ -3,6 +3,7 @@ using namespace std;
 #include <filesystem>
 using namespace std::tr2::sys;
 #include "LaunchtimesValidator.h"
+#include "StringHelpers.h"
 
 bool LaunchTimesValidator::validate() {
 	
@@ -16,6 +17,7 @@ bool LaunchTimesValidator::validate() {
 
 	//Means we have correct number of arguments. Validate that we have a .txt file next
 	string filename = argv[1];
+	filename = StringHelpers::trim(filename);
 	regex fileExt(R"rgx(\.txt$)rgx");
 	bool regexMatch = regex_search(filename, fileExt, regex_constants::match_any);
 

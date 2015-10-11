@@ -148,6 +148,7 @@
     <ClCompile Include="LaunchtimesValidator.cpp" />
     <ClCompile Include="LaunchTimes_main.cpp" />
     <ClCompile Include="Results.cpp" />
+    <ClCompile Include="StringHelpers.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IArgumentValidator.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="LauncherCommand.h" />
     <ClInclude Include="LaunchtimesValidator.h" />
     <ClInclude Include="Results.h" />
+    <ClInclude Include="StringHelpers.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

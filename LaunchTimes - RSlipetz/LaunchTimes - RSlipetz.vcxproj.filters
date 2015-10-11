@@ -34,6 +34,9 @@
     <ClCompile Include="Results.cpp">
       <Filter>Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="StringHelpers.cpp">
+      <Filter>Helpers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IArgumentValidator.h">
@@ -52,6 +55,9 @@
       <Filter>Launchers</Filter>
     </ClInclude>
     <ClInclude Include="Results.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="StringHelpers.h">
       <Filter>Helpers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,11 +5,13 @@ using namespace std;
 
 #include "FilesLauncher.h"
 #include "Results.h"
+#include "StringHelpers.h"
+using namespace StringHelpers;
 
-//LaunchThread - Launches all of the Commands for the corresponding LaunchGroup in an asynchronous fashion
+//LaunchProcesses - Launches all of the Commands for the corresponding LaunchGroup in an asynchronous fashion
 //Accepts - Vector<LaunchCommand> that contains all of the commands to be launched in concurrently
 //Returns - Vector<Results> that contains all of the results for the Commands that were executed in this launch group
-vector<Results> LauncheProcesses(vector<LauncherCommand>& commands) {
+vector<Results> LaunchProcesses(vector<LauncherCommand>& commands) {
 	vector<future<void>> futureCallbacks;
 
 	for (LauncherCommand& command : commands) {
@@ -36,6 +38,7 @@ vector<Results> LauncheProcesses(vector<LauncherCommand>& commands) {
 //Returns - Nothing. All output is directly to the console
 void OutputResults(vector<Results>& results) {
 	int launchGroup = 0;
+	int totalSuccess = 0;
 	vector<Results> errorResults;
 	for (Results& output : results) {
 		if (output.hasProcessFailed()) {
@@ -44,16 +47,26 @@ void OutputResults(vector<Results>& results) {
 		}
 
 		if (output.getLaunchGroup() != launchGroup) {
-			wcout << endl;
+			if (totalSuccess != 0) {
+				wcout << L"Processes Launched: " << totalSuccess << endl;
+				wcout << endl;
+				totalSuccess = 0;
+			}
+
 			launchGroup = output.getLaunchGroup();
 			wcout << "G" << launchGroup << ":" << endl;
 		}
 		wcout << output << endl;
+		++totalSuccess;
+	}
+
+	if (totalSuccess != 0) {
+		wcout << L"Processes Launched: " << totalSuccess << endl;
 	}
 
 	if (errorResults.size() > 0) {
 		wcout << endl;
-		wcout << L"Failed Processes\n" << wstring(16, '*') << endl;
+		wcout << L"Failed Processes - Num Failed: " << errorResults.size() << L"\n" << wstring(25, '*') << endl;
 		for (Results& result : errorResults) {
 			wcout << result << endl;
 		}
@@ -72,12 +85,25 @@ void FilesLauncher::execute() {
 	//Need to parse each line, and pass it to the invoke to create the command objects
 	string fileLine;
 	while (getline(launchFile, fileLine)) {
-		GenerateCommand(launcher, fileLine);
+		try {
+			//Comment line - useful for commenting my .txt file!
+			if (fileLine[0] == '#')
+				continue; 
+
+			GenerateCommand(launcher, fileLine);
+		}
+		catch (wstring& error) {
+			wcout << error << endl;
+			wcout << L"Bypassing line. Continuing..." << endl;
+			wcout << endl;
+		}
 	}
+
+	launchFile.close();
 
 	vector<Results> programResults;
 	for (LauncherObject sequence : launcher) {
-		vector<Results> results = LauncheProcesses(sequence.second);
+		vector<Results> results = LaunchProcesses(sequence.second);
 		programResults.insert(programResults.end(), results.begin(), results.end());
 	}
 
@@ -89,18 +115,35 @@ void FilesLauncher::GenerateCommand(LauncherMap &map, string &fileLine) {
 	size_t startIndex = 0;
 
 	//Get Launch Group
-	wstring launchNumber = parsingLine.substr(startIndex, parsingLine.find_first_of(','));
+	size_t commaPos = parsingLine.find_first_of(',');
+	if (commaPos == string::npos) { 
+		throw L"Invalid line format (Missing Comma): \n" + parsingLine;
+	}
+
+	wstring launchNumber = parsingLine.substr(startIndex, commaPos);
+	//Need the full size of the string before the trim
 	startIndex += launchNumber.size() + 1;
+	launchNumber = trim(launchNumber);
 	int launchGroup = stoi(launchNumber);
 
 	//Get Executable
-	wstring executable = parsingLine.substr(startIndex, parsingLine.find_first_of(',', startIndex) - 2);
+	commaPos = parsingLine.find_first_of(',', startIndex);
+	if (commaPos == string::npos) {
+		throw L"Invalid line format (Missing Comma): \n" + parsingLine;
+	}
+
+	wstring test = parsingLine.substr(8, 300);
+	wstring executable = parsingLine.substr(startIndex, (commaPos - startIndex));
+	//Need the full size of the string before the trim
 	startIndex += executable.size() + 1;
+	executable = trim(executable);
+
 
 	//Get Parameters
 	wstring parameters = L"";
 	if(startIndex < parsingLine.size())
 		parameters = parsingLine.substr(startIndex, parsingLine.size() - startIndex);
+	parameters = trim(parameters);
 
 	map[launchGroup].push_back(LauncherCommand(launchGroup, executable, parameters));
 }
